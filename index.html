@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scoundrel — Solo Card Game</title>
+    <meta
+      name="description"
+      content="Play Scoundrel, a solo dungeon card game built with vanilla HTML, CSS, and JavaScript."
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app" id="appRoot">
+      <header class="hud" aria-label="Game status">
+        <div
+          id="scoreBanner"
+          class="score-banner"
+          hidden
+          aria-live="polite"
+        ></div>
+        <div class="hud__item hud__health">
+          <h2>Health</h2>
+          <div
+            class="health-meter"
+            role="progressbar"
+            aria-label="Player health"
+            aria-valuemin="0"
+            aria-valuemax="20"
+            aria-valuenow="20"
+            id="healthMeter"
+          >
+            <div class="health-meter__fill" id="healthFill"></div>
+            <span class="health-meter__label" id="healthLabel">20 / 20</span>
+          </div>
+        </div>
+
+        <div class="hud__item">
+          <h2>Weapon</h2>
+          <p id="weaponLabel" aria-live="polite">None</p>
+          <p class="muted" id="weaponRuleLabel">Last defeated: —</p>
+        </div>
+
+        <div class="hud__item">
+          <h2>Run</h2>
+          <p><strong>Turn:</strong> <span id="turnCount">0</span></p>
+          <p><strong>Deck:</strong> <span id="deckCount">0</span></p>
+          <p><strong>Discard:</strong> <span id="discardCount">0</span></p>
+          <p><strong>Avoid:</strong> <span id="avoidState">Available</span></p>
+        </div>
+      </header>
+
+      <section class="controls" aria-label="Game controls">
+        <button type="button" id="newGameBtn">New Game</button>
+        <button type="button" id="avoidBtn">Avoid Room</button>
+        <button
+          type="button"
+          id="helpBtn"
+          aria-haspopup="dialog"
+          aria-controls="helpModal"
+        >
+          Help / Rules
+        </button>
+      </section>
+
+      <main>
+        <section class="room-panel" aria-labelledby="roomHeading">
+          <div class="room-panel__header">
+            <h1 id="roomHeading">Room</h1>
+            <p class="room-panel__hint" id="roomHint">
+              Choose 3 cards to resolve. The 4th carries forward.
+            </p>
+          </div>
+          <div
+            class="room-grid"
+            id="roomGrid"
+            role="list"
+            aria-label="Current room cards"
+          ></div>
+        </section>
+      </main>
+
+      <section class="log-panel" aria-labelledby="logHeading">
+        <div class="log-panel__header">
+          <h2 id="logHeading">Action Log</h2>
+          <button type="button" id="clearLogBtn" class="ghost">
+            Clear Log
+          </button>
+        </div>
+        <ul
+          id="logList"
+          class="log-list"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+        ></ul>
+      </section>
+    </div>
+
+    <dialog id="helpModal" aria-labelledby="helpTitle">
+      <article class="modal-content">
+        <h2 id="helpTitle">How to Play Scoundrel</h2>
+        <p>
+          You start with <strong>20 health</strong>. Survive the dungeon by
+          resolving cards in each room.
+        </p>
+        <ul>
+          <li>
+            <strong>Room:</strong> 4 visible cards. Either <em>Avoid</em> once
+            (not twice in a row) or resolve 3 cards.
+          </li>
+          <li>
+            <strong>Carry:</strong> After resolving 3 cards, the 4th card
+            becomes the first card of the next room.
+          </li>
+          <li>
+            <strong>Weapons (♦2–10):</strong> Equip to reduce monster damage.
+            Equipping a new weapon discards the old one and its stack.
+          </li>
+          <li>
+            <strong>Potions (♥2–10):</strong> Heal up to 20. Only one potion per
+            room has effect.
+          </li>
+          <li>
+            <strong>Monsters (♣/♠):</strong> Bare-handed damage is full value.
+            With a weapon, damage is monster − weapon (minimum 0).
+          </li>
+          <li>
+            <strong>Weapon sequence rule:</strong> A weapon can only be used on
+            monsters whose value is less than or equal to the last monster it
+            fully defeated. Example: if your last defeated monster with that
+            weapon was 8, you may use it on 8, 7, 6... but not 9.
+          </li>
+          <li>
+            <strong>Win:</strong> Clear the dungeon deck. Score is remaining
+            health.
+          </li>
+          <li>
+            <strong>Lose:</strong> Health reaches 0. Score is negative sum of
+            monster values left in deck.
+          </li>
+        </ul>
+        <form method="dialog">
+          <button autofocus>Close</button>
+        </form>
+      </article>
+    </dialog>
+
+    <dialog id="endModal" aria-labelledby="endTitle">
+      <article class="modal-content">
+        <h2 id="endTitle">Run Complete</h2>
+        <div id="endKillerSection" class="end-killer-section" hidden>
+          <p class="end-killer-label">Defeated by</p>
+          <div
+            id="endKillerCard"
+            class="end-killer-card"
+            aria-hidden="true"
+          ></div>
+        </div>
+        <dl id="endSummary" class="end-summary"></dl>
+        <form method="dialog">
+          <button autofocus>Close</button>
+        </form>
+      </article>
+    </dialog>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
