@@ -267,7 +267,7 @@ function resolveMonster(state, card) {
     return;
   }
 
-  if (state.deck.length === 0) {
+  if (state.deck.length === 0 && state.room.length === 0) {
     concludeWin(state);
   }
 }
