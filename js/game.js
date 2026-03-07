@@ -131,6 +131,11 @@ export function resolveRoomCard(state, roomRef) {
     return;
   }
 
+  if (state.deck.length === 0 && state.room.length === 0) {
+    concludeWin(state);
+    return;
+  }
+
   if (state.roomResolvedCount >= RESOLVES_PER_ROOM) {
     finalizeRoom(state);
   }
@@ -265,10 +270,6 @@ function resolveMonster(state, card) {
     state.defeatingCard = card;
     concludeLoss(state);
     return;
-  }
-
-  if (state.deck.length === 0 && state.room.length === 0) {
-    concludeWin(state);
   }
 }
 
